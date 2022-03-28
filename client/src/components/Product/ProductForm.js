@@ -100,7 +100,10 @@ const ProductForm = (props) => {
       };
 
       onSubmitProp(data);
-      clearForm();
+      
+      if (!product) {
+        clearForm();
+      }
 
     } else {
       errorMessage('Please provide valid data');

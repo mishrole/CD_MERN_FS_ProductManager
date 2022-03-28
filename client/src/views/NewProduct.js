@@ -11,6 +11,7 @@ const NewProduct = () => {
   const [products, setProducts] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [updateList, setUpdateList] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   useEffect(() => {
     getProducts()
@@ -31,6 +32,15 @@ const NewProduct = () => {
       setUpdateList(true);
     })
     .catch((err) => {
+      const errors = err?.error?.errors;
+      const errorArr = [];
+
+      for (const key of Object.keys(errors)) {
+        errorArr.push(errors[key].message);
+      }
+
+      setErrors(errorArr);
+      
       errorMessage(err.error._message || err.message, err.error.message);
     });
   }
@@ -38,6 +48,11 @@ const NewProduct = () => {
   return (
     <>
     <Header />
+    <div className="container py-3">
+      {
+        errors.map((err, index) =>  <p key={index} className="text-danger">{err}</p>)
+      }
+    </div>
     <ProductForm onSubmitProp={ onFormSubmit }/>
     <div className="py-3">
       {

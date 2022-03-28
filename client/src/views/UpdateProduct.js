@@ -12,6 +12,7 @@ const UpdateProduct = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState();
   const [loaded, setLoaded] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   useEffect(() => {
     getProduct(id)
@@ -37,6 +38,15 @@ const UpdateProduct = () => {
       navigate(`/${id}`);
     })
     .catch((err) => {
+      const errors = err?.error?.errors;
+      const errorArr = [];
+
+      for (const key of Object.keys(errors)) {
+        errorArr.push(errors[key].message);
+      }
+
+      setErrors(errorArr);
+
       errorMessage(err.error._message || err.message, err.error.message);
     });
   }
@@ -44,6 +54,11 @@ const UpdateProduct = () => {
   return (
     <>
       <Header />
+      <div className="container">
+        {
+        errors.map((err, index) =>  <p key={index} className="text-danger">{err}</p>)
+      }
+      </div>
       { loaded && <ProductForm onSubmitProp={ onFormSubmit } product={ product } />}
     </>
   )

@@ -58,7 +58,7 @@ module.exports.getProduct = (req, res) => {
 }
 
 module.exports.updateProduct = (req, res) => {
-  Product.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+  Product.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true, runValidators: true })
   .then(data =>
     res.json(data)
   )
