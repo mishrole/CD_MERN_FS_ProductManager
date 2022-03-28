@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getProduct } from '../../helpers/getProduct';
-import { errorMessage } from '../../utils/SwalMessage';
+import { errorMessage, successMessage } from '../../utils/SwalMessage';
 import { useNavigate } from 'react-router-dom';
+import { deleteProduct } from '../../helpers/deleteProduct';
 
 const ShowProduct = (props) => {
 
@@ -10,6 +11,17 @@ const ShowProduct = (props) => {
 
   const goToEditProduct = (id) => {
     navigate(`/${id}/edit`);
+  }
+
+  const removeProduct = (productId) => {
+    deleteProduct(productId)
+    .then(({ data }) => {
+      successMessage(`<p>Product has been deleted successfully!</p>`);
+      navigate('/');
+    })
+    .catch((err) => {
+      errorMessage(err.error._message || err.message, err.error.message);
+    });
   }
 
   const [product, setProduct] = useState({});
@@ -43,8 +55,9 @@ const ShowProduct = (props) => {
           <p className="card-text">{ product.description }</p>
         </div>
         <div className="card-footer">
-          <div className="d-flex justify-content-end align-items-center">
+          <div className="d-flex justify-content-between align-items-center">
             <button className="btn btn-info" onClick={ () => goToEditProduct(product._id) }>Edit</button>
+            <button className="btn btn-danger" onClick={ (e) => { removeProduct(product._id) } }>Delete</button>
           </div>
         </div>
       </div>

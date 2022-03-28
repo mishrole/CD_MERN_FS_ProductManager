@@ -9,25 +9,27 @@ const NewProduct = () => {
 
   const [products, setProducts] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [updateList, setUpdateList] = useState(false);
 
   useEffect(() => {
     getProducts()
     .then(({ data }) => {
       setProducts(data);
       setLoaded(true);
+      setUpdateList(false);
     })
     .catch((err) => {
       errorMessage(err);
     });
-  },[]);
+  },[updateList]);
 
   return (
     <>
     <Header />
-    <AddProduct/>
+    <AddProduct setUpdateList={ setUpdateList }/>
     <div className="py-3">
       {
-        loaded && <ListProducts products={ products } />
+        loaded && <ListProducts products={ products } setProducts={ setProducts } />
       }
     </div>
     </>

@@ -29,7 +29,8 @@ const initialState = {
   }
 }
 
-const AddProduct = () => {
+const AddProduct = (props) => {
+  const { setUpdateList } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleChange = (e) => {
@@ -75,6 +76,7 @@ const AddProduct = () => {
       .then(({ data }) => {
         successMessage(`<p>${data?.product?.title} has been added successfully!</p><p>Generated Id: ${data?.product?._id}</p>`);
         clearForm();
+        setUpdateList(true);
       })
       .catch((err) => {
         errorMessage(err.error._message || err.message, err.error.message);

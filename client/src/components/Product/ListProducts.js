@@ -4,17 +4,22 @@ import { deleteProduct } from './../../helpers/deleteProduct';
 import { errorMessage, successMessage } from '../../utils/SwalMessage';
 
 const ListProducts = (props) => {
-  const { products } = props;
+  const { products, setProducts } = props;
   const navigate = useNavigate();
 
   const goToProduct = (id) => {
     navigate(`/${id}`);
   }
 
+  const removeFromDom = (productId) => {
+    setProducts(products.filter(product => product._id !== productId));
+  }
+
   const removeProduct = (productId) => {
     deleteProduct(productId)
     .then(({ data }) => {
       successMessage(`<p>Product has been deleted successfully!</p>`);
+      removeFromDom(productId);
     })
     .catch((err) => {
       errorMessage(err.error._message || err.message, err.error.message);
