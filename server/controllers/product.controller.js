@@ -54,5 +54,31 @@ module.exports.getProduct = (req, res) => {
       message: 'Something went wrong',
       error: err
     })
+  );
+}
+
+module.exports.updateProduct = (req, res) => {
+  Product.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+  .then(data =>
+    res.json(data)
+  )
+  .catch(err => 
+    res.status(500).json({
+      message: 'Something went wrong',
+      error: err
+    })
+  );
+}
+
+module.exports.deleteProduct = (req, res) => {
+  Product.deleteOne({ _id: req.params.id })
+  .then(data =>
+    res.json(data)
+  )
+  .catch(err =>
+    res.status(500).json({
+      message: 'Something went wrong',
+      error: err
+    })
   )
 }

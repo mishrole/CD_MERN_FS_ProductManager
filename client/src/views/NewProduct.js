@@ -3,6 +3,7 @@ import { getProducts } from './../helpers/getProducts';
 import { errorMessage } from './../utils/SwalMessage';
 import AddProduct from '../components/Product/AddProduct';
 import ListProducts from '../components/Product/ListProducts';
+import Header from '../components/Header/Header';
 
 const NewProduct = () => {
 
@@ -17,12 +18,12 @@ const NewProduct = () => {
     })
     .catch((err) => {
       errorMessage(err);
-      // errorMessage(err.error._message || err.message, err.error.message);
     });
   },[]);
 
   return (
     <>
+    <Header />
     <AddProduct/>
     <div className="py-3">
       {

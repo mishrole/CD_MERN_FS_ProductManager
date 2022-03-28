@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getProduct } from './../helpers/getProduct';
-import { errorMessage } from './../utils/SwalMessage';
+import { getProduct } from '../../helpers/getProduct';
+import { errorMessage } from '../../utils/SwalMessage';
+import { useNavigate } from 'react-router-dom';
 
 const ShowProduct = (props) => {
 
-  const { id } = useParams();
+  const { id } = props;
+  const navigate = useNavigate();
+
+  const goToEditProduct = (id) => {
+    navigate(`/${id}/edit`);
+  }
+
   const [product, setProduct] = useState({});
 
   useEffect(() => {
@@ -35,6 +41,11 @@ const ShowProduct = (props) => {
             </div>
           </div>
           <p className="card-text">{ product.description }</p>
+        </div>
+        <div className="card-footer">
+          <div className="d-flex justify-content-end align-items-center">
+            <button className="btn btn-info" onClick={ () => goToEditProduct(product._id) }>Edit</button>
+          </div>
         </div>
       </div>
     </div>
