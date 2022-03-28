@@ -30,3 +30,29 @@ module.exports.createProduct = (req, res) => {
     })
   );
 }
+
+module.exports.getAllProducts = (req, res) => {
+  Product.find({})
+  .then(data => 
+    res.json(data)
+  )
+  .catch(err =>
+    res.status(500).json({
+      message: 'Something went wrong',
+      error: err
+    })
+  );
+}
+
+module.exports.getProduct = (req, res) => {
+  Product.findOne({ _id: req.params.id })
+  .then(data =>
+    res.json(data)
+  )
+  .catch(err => 
+    res.status(500).json({
+      message: 'Something went wrong',
+      error: err
+    })
+  )
+}
