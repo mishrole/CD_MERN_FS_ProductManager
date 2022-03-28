@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteProduct } from './../../helpers/deleteProduct';
-import { errorMessage, successMessage } from '../../utils/SwalMessage';
+import DeleteProduct from './DeleteProduct';
 
 const ListProducts = (props) => {
   const { products, setProducts } = props;
@@ -13,17 +12,6 @@ const ListProducts = (props) => {
 
   const removeFromDom = (productId) => {
     setProducts(products.filter(product => product._id !== productId));
-  }
-
-  const removeProduct = (productId) => {
-    deleteProduct(productId)
-    .then(({ data }) => {
-      successMessage(`<p>Product has been deleted successfully!</p>`);
-      removeFromDom(productId);
-    })
-    .catch((err) => {
-      errorMessage(err.error._message || err.message, err.error.message);
-    });
   }
 
   return (
@@ -52,7 +40,7 @@ const ListProducts = (props) => {
                 <div className="card-footer">
                   <div className="d-flex justify-content-between align-items-center">
                     <button className="btn btn-secondary" onClick={ () => goToProduct(product._id) }>Show</button>
-                    <button className="btn btn-danger" onClick={ (e) => { removeProduct(product._id) } }>Delete</button>
+                    <DeleteProduct productId={ product._id } successCallback={ () => { removeFromDom(product._id) } }/>
                   </div>
                 </div>
               </div>

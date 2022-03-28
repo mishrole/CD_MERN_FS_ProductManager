@@ -1,40 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { getProduct } from '../../helpers/getProduct';
-import { errorMessage, successMessage } from '../../utils/SwalMessage';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteProduct } from '../../helpers/deleteProduct';
+import DeleteProduct from './DeleteProduct';
 
 const ShowProduct = (props) => {
 
-  const { id } = props;
+  const { product } = props;
   const navigate = useNavigate();
 
-  const goToEditProduct = (id) => {
-    navigate(`/${id}/edit`);
+  const goToEditProduct = (productId) => {
+    navigate(`/${productId}/edit`);
   }
 
-  const removeProduct = (productId) => {
-    deleteProduct(productId)
-    .then(({ data }) => {
-      successMessage(`<p>Product has been deleted successfully!</p>`);
-      navigate('/');
-    })
-    .catch((err) => {
-      errorMessage(err.error._message || err.message, err.error.message);
-    });
+  const goToListProducts = () => {
+    navigate('/');
   }
-
-  const [product, setProduct] = useState({});
-
-  useEffect(() => {
-    getProduct(id)
-    .then(({ data }) => {
-      setProduct(data);
-    })
-    .catch((err) => {
-      errorMessage(err);
-    })
-  }, [id]);
 
   return (
     <div className="container py-3">
@@ -57,7 +36,7 @@ const ShowProduct = (props) => {
         <div className="card-footer">
           <div className="d-flex justify-content-between align-items-center">
             <button className="btn btn-info" onClick={ () => goToEditProduct(product._id) }>Edit</button>
-            <button className="btn btn-danger" onClick={ (e) => { removeProduct(product._id) } }>Delete</button>
+            <DeleteProduct productId={ product._id } successCallback={ goToListProducts }/>
           </div>
         </div>
       </div>

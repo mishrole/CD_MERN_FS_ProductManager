@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { getProducts } from './../helpers/getProducts';
-import { errorMessage } from './../utils/SwalMessage';
-import AddProduct from '../components/Product/AddProduct';
+import { errorMessage, successMessage } from './../utils/SwalMessage';
 import ListProducts from '../components/Product/ListProducts';
 import Header from '../components/Header/Header';
+import ProductForm from '../components/Product/ProductForm';
+import { postProduct } from '../helpers/postProduct';
 
 const NewProduct = () => {
 
@@ -23,10 +24,21 @@ const NewProduct = () => {
     });
   },[updateList]);
 
+  const onFormSubmit = (data) => {
+    postProduct(data)
+    .then(({ data }) => {
+      successMessage(`<p>${data?.product?.title} has been added successfully!</p><p>Generated Id: ${data?.product?._id}</p>`);
+      setUpdateList(true);
+    })
+    .catch((err) => {
+      errorMessage(err.error._message || err.message, err.error.message);
+    });
+  }
+
   return (
     <>
     <Header />
-    <AddProduct setUpdateList={ setUpdateList }/>
+    <ProductForm onSubmitProp={ onFormSubmit }/>
     <div className="py-3">
       {
         loaded && <ListProducts products={ products } setProducts={ setProducts } />

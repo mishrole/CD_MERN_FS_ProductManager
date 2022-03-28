@@ -1,9 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getProduct } from '../../helpers/getProduct';
-import { putProduct } from '../../helpers/putProduct';
 import { formIsValid } from '../../utils/FormValidation';
-import { errorMessage, successMessage } from '../../utils/SwalMessage';
+import { errorMessage } from '../../utils/SwalMessage';
 
 const reducer = (state, action) => {
   if (action.type === 'reset') {
@@ -35,39 +32,36 @@ const initialState = {
   }
 }
 
-const EditProduct = (props) => {
+const ProductForm = (props) => {
 
-  const { id } = props;
-  const navigate = useNavigate();
-
+  const { onSubmitProp, product } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
 
-
   useEffect(() => {
-    getProduct(id)
-    .then(({ data }) => {
+    if (product) {
       dispatch({
-        type: 'overwrite', 
+        type: 'overwrite',
         payload: {
           title: {
-            value: data.title,
+            value: product.title,
             error: null
           },
           price: {
-            value: data.price,
+            value: product.price,
             error: null
           },
           description: {
-            value: data.description,
+            value: product.description,
             error: null
           }
         }
-      });
-    })
-    .catch((err) => {
-      errorMessage(err);
-    })
-  }, [id]);
+      })
+    }
+  }, [product])
+
+  const clearForm = () => {
+    dispatch({ type: 'reset' });
+  }
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
@@ -96,23 +90,18 @@ const EditProduct = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    
     if (formIsValid(e)) {
       const data = {
+        id: product?.id,
         title: state.title.value,
         price: state.price.value,
         description: state.description.value
       };
 
-      putProduct(id, data)
-      .then(({ data }) => {
-        successMessage(`<p>${data?.product?.title} has been updated successfully!</p>`);
-        // clearForm();
-        navigate(`/${id}`);
-      })
-      .catch((err) => {
-        errorMessage(err.error._message || err.message, err.error.message);
-      });
+      onSubmitProp(data);
+      clearForm();
+
     } else {
       errorMessage('Please provide valid data');
     }
@@ -148,7 +137,7 @@ const EditProduct = (props) => {
 
         <div className="col-12 mb-3 d-flex justify-content-center">
           <div>
-          <button className="btn btn-primary" type="submit">Update Product</button>
+          <button className="btn btn-primary" type="submit">{ product ? 'Update' : 'Create'} Product</button>
           </div>
         </div>
       </form>
@@ -156,4 +145,4 @@ const EditProduct = (props) => {
   )
 }
 
-export default EditProduct;
+export default ProductForm;
